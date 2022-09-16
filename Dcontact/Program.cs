@@ -41,13 +41,13 @@ else
     app.UseHsts();
 }
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
 
-//    var context = services.GetRequiredService<Web_ProjectContext>();
-//    context.Database.EnsureCreated();
-//}
+    var context = services.GetRequiredService<Web_ProjectContext>();
+    context.Database.EnsureCreated();
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
