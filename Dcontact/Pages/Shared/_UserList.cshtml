@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<UserIdentity> SignInManager
+@inject UserManager<UserIdentity> UserManager
+    @{
+    var userIdentity = await UserManager.GetUserAsync(User);
+    var Users = Model.UserIdentities;
+    }
+
+    @{
+    if (Users != null)
+            @foreach (var user in Users)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td class="statistical__table-item-link">
+                        @user.Email
+                    </td>
+                    <td>
+                        <select class="statistical__slect-item">
+                            @{
+                                if (UserManager.IsInRoleAsync(user, "User").Result)
+                                {
+                                    <option id=@user.Id value="User" selected>User</option>
+                                    <option id=@user.Id value="Admin">Admin</option>
+                                }
+                                else
+                                {
+                                    <option id=@user.Id value="User">User</option>
+                                    <option id=@user.Id value="Admin" selected>Admin</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                </tr>
+            }
+    }
+ 
+
+
+
+
+

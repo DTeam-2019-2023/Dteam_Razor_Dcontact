@@ -14,6 +14,7 @@ namespace Dcontact.Data
         public string IdAvatar { get; set; } = null!;
         public string IdBackGround { get; set; } = null!;
         public string IdDcontact { get; set; } = null!;
+        public string Name { get; set; } = null!;
         public bool IsApply { get; set; }
 
         public virtual TbAvatar IdAvatarNavigation { get; set; } = null!;

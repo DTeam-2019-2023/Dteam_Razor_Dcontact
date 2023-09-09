@@ -1,0 +1,449 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* temp */
+img {
+    width: 100px;
+}
+
+.payment {
+    width: 100%;
+    height: calc(100vh - 60px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color);
+}
+
+.payment__container {
+    height: 450px;
+    background-color: var(--background-body);
+    margin: 2em auto;
+    border-radius: 8px;
+    /* position: relative; */
+    padding: 1em;
+    width: 80%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.paymentInformation {
+    width: 35em;
+}
+
+/* .orderCard__preview {
+    position: absolute;
+    left: 0;
+} */
+
+.paymentInformation__title {
+    color: var(--title-color);
+    font-family: 'Pacifico-Regular';
+    font-size: 2em;
+    text-decoration: underline;
+}
+
+.paymentInformation__userInfo {
+    padding: .5em 0;
+    display: flex;
+    justify-content: space-between;
+    /* position: relative; */
+}
+
+.userInfo__input {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid var(--toggle-color);
+    padding: 8px;
+    border-radius: 8px;
+    transition: .5s;
+    outline: none;
+    width: 100%;
+}
+
+    .userInfo__input:focus,
+    .creditCard__numberCard input:focus,
+    .inputDetailGroup input:focus {
+        border: 2px solid var(--toggle-color);
+    }
+
+
+.inputBox {
+    position: relative;
+    width: 50%;
+}
+
+    .inputBox span,
+    .creditCard__numberCard span,
+    .inputDetailGroup span {
+        position: absolute;
+        left: 0.5em;
+        top: 0.6em;
+        color: #fff;
+        font-family: Roboto;
+        font-size: 13px;
+        transition: .5s;
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    .inputBox input:valid ~ span,
+    .inputBox input:focus ~ span,
+    .creditCard__numberCard input:valid ~ span,
+    .creditCard__numberCard input:focus ~ span,
+    .inputDetailGroup input:valid ~ span,
+    .inputDetailGroup input:focus ~ span {
+        background-color: var(--background-body);
+        transform: translate(5px, -15px);
+        font-size: 12px;
+        opacity: 1;
+    }
+
+    .inputBox:first-child {
+        margin-right: 1em;
+    }
+
+.iconValidation {
+    position: absolute;
+    color: red;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+}
+
+#iconValidation-address{
+    display:none;
+}
+#iconValidation-phone {
+    display: none;
+}
+#iconValidation-numbercard {
+    display: none;
+}
+#iconValidation-quantity {
+    display: none;
+}
+#iconValidation-cvc {
+    display: none;
+}
+#iconValidation-expiration {
+    display: none;
+}
+
+.creditCard__numberCard {
+    margin: 1em 0;
+    position: relative;
+    font-family: Roboto;
+}
+
+    .creditCard__numberCard input {
+        width: 100%;
+        background-color: transparent;
+        color: #fff;
+        border: 1px solid var(--toggle-color);
+        padding: 8px;
+        border-radius: 8px;
+        transition: .5s;
+        outline: none;
+    }
+
+.creditCard__detailInfo {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 1em;
+}
+
+.inputDetailGroup {
+    position: relative;
+}
+
+    .inputDetailGroup input {
+        background-color: transparent;
+        color: #fff;
+        border: 1px solid var(--toggle-color);
+        padding: 8px;
+        border-radius: 8px;
+        transition: .5s;
+        outline: none;
+        width: 100%;
+    }
+
+.orderBtn {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1em;
+}
+
+.btnPayment {
+    background-color: transparent;
+    color: var(--toggle-color);
+    padding: 8px;
+    border-radius: 8px;
+    outline: none;
+    border: 2px solid #fff;
+    cursor: pointer;
+    transition: .25s;
+    width: 120px;
+}
+
+    .btnPayment:hover {
+        background-color: var(--toggle-color);
+        border: 2px solid transparent;
+        color: #fff;
+        width: 150px;
+    }
+
+/* CARD PREVIEW */
+.orderCard__preview {
+    /* position: absolute;
+    padding: 1em; */
+}
+
+.frontCard__preview,
+.backCard__preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cardPreview__img {
+    width: 20rem;
+    height: 10rem;
+    border-radius: 8px;
+}
+
+.frontCard__preview span,
+.backCard__preview span {
+    padding: .5em 0;
+    color: var(--title-color);
+    font-family: Pacifico-Regular;
+}
+
+/* POPUP PAYMENT */
+
+.overlay__popupPayment {
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: none;
+}
+
+.popupPayment__container {
+    width: 350px;
+    background-color: var(--background-color);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1em;
+    border-radius: 8px;
+    font-family: Roboto;
+    animation: slide3 .5s forwards;
+}
+
+.popupPayment__title {
+    font-family: Pacifico-Regular;
+    color: var(--title-color);
+    font-size: 1.5em;
+    text-decoration: underline;
+}
+
+.item--detail {
+    display: flex;
+    align-items: center;
+    padding: 0.5em 1em;
+    justify-content: space-between;
+}
+
+#shoppingCart--detail .item--detail:nth-child(3) {
+    position: relative;
+}
+
+    #shoppingCart--detail .item--detail:nth-child(3)::after {
+        content: "";
+        position: absolute;
+        width: 120px;
+        height: 2px;
+        background-color: var(--toggle-color);
+        right: 0;
+        top: 0;
+    }
+
+.popupPayment__btn {
+    display: flex;
+    justify-content: flex-end;
+}
+
+    .popupPayment__btn button {
+        padding: 8px;
+        border-radius: 4px;
+        outline: none;
+        border: none;
+        background-color: var(--toggle-color);
+        color: #fff;
+        margin: 0.5em;
+        cursor: pointer;
+        width: 80px;
+        transition: 0.5s;
+    }
+
+        .popupPayment__btn button:hover {
+            width: 100px;
+        }
+
+#paymentPopup {
+    top: 0;
+    z-index: 100;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.3);
+    font-family: 'Roboto';
+    display: none;
+}
+
+/* RESPONSIVE */
+@media(max-width: 320px) {
+}
+
+@media(min-width: 321px) and (max-width: 540px) {
+}
+
+@media(min-width: 541px) and (max-width: 720px) {
+}
+
+@media(min-width: 721px) and (max-width: 960px) {
+}
+
+@media(min-width: 961px) and (max-width: 1200px) {
+    .payment__container {
+        width: 100%;
+        margin: 1em;
+    }
+
+    .cardPreview__img {
+        width: 18rem;
+        height: 8rem;
+    }
+}
+
+@media(min-width: 1201px) and (max-width: 1500px) {
+}
+
+@media(min-width: 1501px) and (max-width: 1920px) {
+    .cardPreview__img {
+        width: 24rem;
+        height: 12rem;
+    }
+
+    .paymentInformation__title {
+        font-size: 2.5rem;
+    }
+
+    .userInfo__input {
+        padding: 12px;
+        font-size: 1em;
+    }
+
+    .inputBox span {
+        top: 1.1em;
+    }
+
+    .inputBox input:valid ~ span,
+    .inputBox input:focus ~ span,
+    .creditCard__numberCard input:valid ~ span,
+    .creditCard__numberCard input:focus ~ span,
+    .inputDetailGroup input:valid ~ span,
+    .inputDetailGroup input:focus ~ span {
+        transform: translate(5px, -18px);
+    }
+
+    .paymentInformation {
+        width: 46rem;
+    }
+
+    .creditCard__numberCard input {
+        padding: 12px;
+        font-size: 1em;
+    }
+
+    .creditCard__numberCard span {
+        top: 1em;
+    }
+
+    .inputDetailGroup input {
+        padding: 12px;
+        font-size: 1em;
+    }
+
+    .inputDetailGroup span {
+        top: 1em;
+    }
+
+    .payment__container {
+        height: 550px;
+    }
+}
+
+@media(min-width: 1921px) {
+    .cardPreview__img {
+        width: 26rem;
+    }
+
+    .paymentInformation__title {
+        font-size: 2.5rem;
+    }
+
+    .userInfo__input {
+        padding: 12px;
+        font-size: 1em;
+    }
+
+    .inputBox span {
+        top: 1.1em;
+    }
+
+    .inputBox input:valid ~ span,
+    .inputBox input:focus ~ span,
+    .creditCard__numberCard input:valid ~ span,
+    .creditCard__numberCard input:focus ~ span,
+    .inputDetailGroup input:valid ~ span,
+    .inputDetailGroup input:focus ~ span {
+        transform: translate(5px, -18px);
+    }
+
+    .paymentInformation {
+        width: 46rem;
+    }
+
+    .creditCard__numberCard input {
+        padding: 12px;
+        font-size: 1em;
+    }
+
+    .creditCard__numberCard span {
+        top: 1em;
+    }
+
+    .inputDetailGroup input {
+        padding: 12px;
+        font-size: 1em;
+    }
+
+    .inputDetailGroup span {
+        top: 1em;
+    }
+
+    .payment__container {
+        height: 550px;
+    }
+}

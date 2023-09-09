@@ -5,14 +5,23 @@ namespace Dcontact.Data
 {
     public partial class TbRowContent
     {
+        public TbRowContent()
+        {
+            TbReports = new HashSet<TbReport>();
+            TbRowDesigns = new HashSet<TbRowDesign>();
+        }
+
         public string Id { get; set; } = null!;
-        public string IdRowDesign { get; set; } = null!;
+        public string IdDcontact { get; set; } = null!;
         public string Text { get; set; } = null!;
         public string Link { get; set; } = null!;
-        public string Code { get; set; } = null!;
-        public DateTime Birth { get; set; }
+        public string? Code { get; set; }
+        public DateTime? Birth { get; set; }
         public int Click { get; set; }
 
-        public virtual TbRowDesign IdRowDesignNavigation { get; set; } = null!;
+        public virtual TbDcontact IdDcontactNavigation { get; set; } = null!;
+        public virtual ICollection<TbReport> TbReports { get; set; }
+        public virtual ICollection<TbRowDesign> TbRowDesigns { get; set; }
     }
 }
+

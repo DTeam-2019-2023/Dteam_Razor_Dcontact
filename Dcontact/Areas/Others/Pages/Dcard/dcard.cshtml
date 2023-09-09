@@ -1,0 +1,341 @@
+﻿@page
+@model DcardModel
+@{
+    ViewData["Title"] = "DCard";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/dcard.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dteam.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/croppie/croppie.css" />
+}
+    <partial name="_Dteam" />
+
+    <div class="dcard__container">
+        <div class="dcard--properties">
+            <div class="prop--header">
+                <span>Design Your Card</span>
+            </div>
+
+            <div class="ownLink">
+                <span id="linkValue">www.dcontact.com/@User.Identity.Name</span>
+                <div class="btnCopy" onclick="copyTextFromElement('linkValue')">
+                    <i class="fa-regular fa-copy"></i>
+                    <p class="copies">Copies</p>
+                </div>
+            </div>
+            <div class="dcard--toggle">
+                <div class="toggle-qr">
+                    <label class="switch">
+                        <input type="checkbox" id="toggleQR" />
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="toggle--name">QR CODE</span>
+                </div>
+                <!-- ============= -->
+                <div class="toggle-qr">
+                    <label class="switch">
+                        <input type="checkbox" id="toggleBg" />
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="toggle--name">BACKGROUND</span>
+                </div>
+                <!-- BACKGROUND CONTENT HEREEE -->
+                <div class="toggle--backgroundContent">
+                    <div class="colorBackground toggleContent">
+                        <span>Pick</span>
+                        <input type="color" id="input--color" name="colorInput" value="#ffffff" />
+                        <span class="choiceContent">OR</span>
+
+
+                        <!-- Button choose file Phu-->
+                        @* <div class='container-form'>
+                    <input id='selectedFile' class="disp-none" type='file' accept=".png, .jpg, .jpeg, .svg">
+                    <button id="upload-aphoto" class="btn-primary btn">Select image</button>
+                    </div>*@
+                        <input type="file" id="imgBackground" accept=".png, .jpg, .jpeg, .svg" />
+
+
+                    </div>
+                </div>
+                <!-- ============= -->
+                <div class="toggle-qr">
+                    <label class="switch">
+                        <input type="checkbox" id="toggleAvt" />
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="toggle--name">AVATAR</span>
+                </div>
+                <!-- AVATAR CONTENT HERE -->
+                <div class="toggle--avatarContent">
+                    <div class="avatarToggle toggleContent">
+                        <input type="file" id="imgAvatar" accept="image/*" />
+
+                        <div class="avatarPosition">
+                            <div class="radio-buttons">
+                                <label class="custom-radio">
+                                    <input type="radio" name="radioAvt" id="radioAvt__topLeft">
+                                    <span class="radio-btn">
+                                        <i class="fa-solid fa-check"></i>
+                                        <div class="position-icons leftPosition">
+                                            <i class="fa-solid fa-border-top-left"></i>
+                                            <nav class="positione-name">Top Left</nav>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="radio-buttons">
+                                <label class="custom-radio">
+                                    <input type="radio" name="radioAvt" id="radioAvt__center">
+                                    <span class="radio-btn">
+                                        <i class="fa-solid fa-check"></i>
+                                        <div class="position-icons centerPosition">
+                                            <i class="fa-solid fa-crosshairs"></i>
+                                            <nav class="positione-name">Center</nav>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="radio-buttons">
+                                <label class="custom-radio">
+                                    <input type="radio" name="radioAvt" id="radioAvt__topRight">
+                                    <span class="radio-btn">
+                                        <i class="fa-solid fa-check"></i>
+                                        <div class="position-icons rightPosition">
+                                            <i class="fa-solid fa-border-top-left"></i>
+                                            <nav class="positione-name">Top Right</nav>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============= -->
+                <div class="toggle-qr">
+                    <label class="switch">
+                        <input type="checkbox" id="toggleContent" />
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="toggle--name">CONTENT</span>
+                </div>
+                <!-- CONTENT -->
+                <div class="toggle--contentContent">
+                    <div class="toggleContent">
+                        <div class="input--content">
+                            <input id="input--content__text" type="text" placeholder="Writing something ...">
+                            <button class="btnContent">Apply</button>
+                        </div>
+                        <!-- CONTENT POSITION -->
+                        <div class="contentPosition">
+                            <div class="radio-buttons">
+                                <label class="custom-radio">
+                                    <input type="radio" name="radioContent" id="radioContent__topLeft">
+                                    <span class="radio-btn">
+                                        <i class="fa-solid fa-check"></i>
+                                        <div class="position-icons leftPosition">
+                                            <i class="fa-solid fa-border-top-left"></i>
+                                            <nav class="positione-name">Top Left</nav>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="radio-buttons">
+                                <label class="custom-radio">
+                                    <input type="radio" name="radioContent" id="radioContent__center">
+                                    <span class="radio-btn">
+                                        <i class="fa-solid fa-check"></i>
+                                        <div class="position-icons centerPosition">
+                                            <i class="fa-solid fa-crosshairs"></i>
+                                            <nav class="positione-name">Center</nav>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="radio-buttons">
+                                <label class="custom-radio">
+                                    <input type="radio" name="radioContent" id="radioContent__topRight">
+                                    <span class="radio-btn">
+                                        <i class="fa-solid fa-check"></i>
+                                        <div class="position-icons rightPosition">
+                                            <i class="fa-solid fa-border-top-left"></i>
+                                            <nav class="positione-name">Top Right</nav>
+                                        </div>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESIGN AREAS -->
+        <div class="dcard__design">
+            <div class="dcard__design--container">
+                <div class="dcard__design--items">
+                    <div class="frontcard">
+                        <p class="card--title">FRONT CARD</p>
+                        <div class="frontCard__container">
+                            <div class="frontCard__container--avt" id="topLeft--avt"></div>
+                            <div class="frontCard__container--avt" id="center--avt"></div>
+                            <div class="frontCard__container--avt" id="topRight--avt"></div>
+                            <canvas id="canvas" width=323.52 height=204.48></canvas>
+                            <canvas hidden="hidden" id="canvasWhite" width=323.52 height=204.48></canvas>
+
+                        </div>
+                    </div>
+                    <div class="backcard">
+                        <p class="card--title">BACK CARD</p>
+                        <div id="bc" class="backCard__container">
+                            <div class="backCard--left">
+                                @*<img alt="QR CODE" class="qrCode">*@
+                                <div class="qrCode__container" id="qrcode"></div>
+                                <span class="qrLink">dc.com/@User.Identity.Name</span>
+                            </div>
+                            <div class="backCard--right">
+                                <div class="cmnBackCard backCard--teamInfo">
+                                    <span class="info--icon">
+                                        <i class="fa-solid fa-people-group"></i>
+                                    </span>
+                                    <div class="teamInfo">
+                                        <img src="~/assets/Asset 3Dcontact.png" alt="logo">
+                                        <span class="textSpan">DTEAM</span>
+                                    </div>
+                                </div>
+                                <div class="cmnBackCard backCard--Contact">
+                                    <span class="card--icons"><i class="fa-solid fa-phone"></i></span>
+                                    <div class="contactInfo">
+                                        <span class="textSpan contactInfo--number">0123.456.789</span>
+                                    </div>
+                                </div>
+                                <div class="cmnBackCard backCard--Email">
+                                    <span class="card--icons"><i class="fa-solid fa-envelope"></i></span>
+                                    <div class="emailInfo">
+                                        <span class="textSpan">dteam@gmail.com</span>
+                                    </div>
+                                </div>
+                                <div class="cmnBackCard backCard--Location">
+                                    <span class="card--icons"><i class="fa-solid fa-location-dot"></i></span>
+                                    <div class="locationInfo">
+                                        <span class="textSpan">Ninh Kieu, Can Tho</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <form method="POST" id="formdata" asp-page="../Payment">
+                        <input asp-for="Input.FrontCard" type="hidden" id="frontcard" />
+                        <input asp-for="Input.BackCard" type="hidden" id="backcard"/>
+                    <div class="overlay__btnOrder">
+                        <button class="btnOrder" onClick="doMerge().then((value)=>getValue(value))" type="button"> <i class="fa-sharp fa-solid fa-cart-shopping"></i>ORDER</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- =========================== -->
+    </div>
+
+    <!-- MODAL CROP BACKGROUND -->
+    <div class="cmnModal" id="modalBg">
+        <div class="modal__container">
+            <div class="modal--header">
+                <span class="header--title"><mark>CROP BACKGROUND</mar></span>
+                <i id="closeModalBg" class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="modal--body" id="modelContent">
+                <div id="upload-demo" class="center-block image--cropped"></div>
+            </div>
+            <div class="modal--footer">
+                <button class="btnModal btnCancel">CANCEL</button>
+                <button id="cropImageBtn" type="button" class="btnModal btnSave">SAVE</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal Phu-->
+    @*<div class="modal fade" id="imageModalContainer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content modal-content1 modal-content1">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModal">Crop Image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body modal-body1">
+                    <div id='crop-image-container'>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary save-modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+    @*    Phu Avt modal*@
+    @*   <div class="cmnModal" id="modalBg">
+        <div class="modal__container">
+            <div class="modal--header">
+                <span class="header--title"><mark>CROP A</mar></span>
+                <i id="closeModalBg" class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="modal--body" id="modelContent">
+                <div id="upload-demo-avt" class="center-block image--cropped"></div>
+            </div>
+            <div class="modal--footer">
+                <button class="btnModal btnCancel">CANCEL</button>
+                <button id="cropImageBtn" type="button" class="btnModal btnSave">SAVE</button>
+            </div>
+        </div>
+    </div>
+*@
+    <!-- MODAL CROP AVATAR -->
+    <div class="cmnModal" id="modalAvt">
+        <div class="modal__container">
+            <div class="modal--header">
+                <span class="header--title"><mark>CROP AVATAR</mar></span>
+                <i id="closeModalAvt" class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="modal--body">
+                <div id="upload-demo-avt" class="center-block image--cropped"></div>
+            </div>
+            <div class="modal--footer">
+                <button class="btnModal btnCancel">CANCEL</button>
+                <button id="cropImageAvtBtn" type="submit" class="btnModal btnSave">SAVE</button>
+            </div>
+        </div>
+    </div>
+    @*POPUP DCARD*@
+    <div class="overlay__popup--dcard" id="overlayPopup">
+        <div class="popup__container">
+            <div class="popup__header">
+                <i id="closePopup" class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="popup__detail">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div class="popup__detail--content">
+                    <span id="error__popup--content"></span>
+                </div>
+            </div>
+            <div class="popup__footer">
+                <button class="btnClosePopup">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/dcard.js"></script>
+    <script src="~/lib/croppie/croppie.js"></script>
+    <script src="~/js/cropImage.js"></script>
+    <script src="https://unpkg.com/merge-images"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src='~/js/html2canvas/html2canvas.min.js'></script>
+    <script src='https://gist.githubusercontent.com/akovalyov/51d220c907bd7398bca9/raw/57f2c2beb61ef7a9812519b006382db6fdff704d/html2canvas.svg.js'></script>
+
+    }

@@ -1,0 +1,13 @@
+﻿@model Dcontact.Areas.Identity.Pages.Account.ForgotPasswordModel
+<form method="post" action="Verify">
+    <div class="forget--inputCode forgetInput">
+        <span asp-validation-for="Input.Email" class="validation" id="code-validation"></span>
+        <input asp-for="Input.Email" type="number" placeholder="Enter Code" aria-required="true" name="code" />
+        <div class="btnCode">
+            <button class="btnBack">
+                <i class="fa-solid fa-arrow-left"></i> BACK
+            </button>
+            <button class="btnVerify btnForget" type="submit">VERIFY</button>
+        </div>
+    </div>
+</form>

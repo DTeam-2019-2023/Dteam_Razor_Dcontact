@@ -1,18 +1,173 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
+
+    body > ._container {
+        transform-origin: center bottom 0px;
+        transition: all 0.5s ease 0s;
+        box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+        background: white;
+        height: calc(100vh - 60px);
+        position: relative;
+    }
+
+
+    body.tight > ._container {
+        transform: translateY(-60px) scale(0.9);
+        cursor: pointer;
+    }
+
+.profile--avatar {
+    display: flex;
+    justify-content: center;
+}
+
+.profile--username {
+    margin: 0 8px 20px 8px;
+    font-family: 'Pacifico-Regular';
+    text-align: center;
+    color: #fff;
+}
+
+.profile--input {
+    margin: 0 1em;
+}
+
+.profile--password,
+.profile--email {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 1em 0;
+}
+
+    .profile--password i,
+    .profile--email i {
+        color: #fff;
+        font-size: 22px;
+        position: absolute;
+        left: 1.5em;
+    }
+
+.profile--input input {
+    padding: 12px;
+    margin: 0.5rem 0;
+    text-align: center;
+    border-radius: 20px;
+    border: 2px solid #0F3D3E;
+    background: transparent;
+    color: #FEFBE7;
+    outline: none;
+    transition: .5s;
+    width: 100%;
+    position: relative;
+}
+
+.profile--password__update {
+    color: #fff;
+    position: absolute;
+    right: 10%;
+    cursor: pointer;
+    top: 55%;
+    font-size: 16px;
+    transition: .25s;
+    opacity: .6;
+}
+
+    .profile--password__update:hover {
+        opacity: 1;
+    }
+
+.cmnInput {
+    color: #fff;
+    font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1em;
+}
+
+    .cmnInput input {
+        padding: 12px;
+        margin: 0.5rem 0;
+        text-align: center;
+        border-radius: 20px;
+        border: 2px solid #0F3D3E;
+        background: transparent;
+        color: #FEFBE7;
+        outline: none;
+        transition: .5s;
+        width: 100%;
+        position: relative;
+    }
+
+
+        .cmnInput input:focus {
+            border-color: #FEFBE7;
+        }
+
+::-webkit-input-placeholder {
+    Chrome /Opera/Safari color: #FEFBE7;
+}
+
+.updatePassword--footer {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .updatePassword--footer a {
+        color: var(--link-color);
+        font-family: "Pacifico-Regular";
+    }
+
+.btnUpdate {
+    width: 50%;
+    padding: 10px;
+    border-radius: var(--border-radius-btn);
+    position: relative;
+    margin: 0.5em 0;
+    cursor: pointer;
+    transition: .25s;
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+    .btnUpdate:hover {
+        background: #fff;
+        color: #100F0F;
+        border: 1px solid #100F0F;
+        box-shadow: rgba(255, 255, 255, 0.05) 0px 1px 0px, rgba(255, 255, 255, 0.1) 0px 0px 8px;
+    }
+
+.updatePassword--header i {
+    color: #fff;
+    font-size: 24px;
+    padding: 8px;
+    cursor: pointer;
+    transition: .25s;
+    opacity: .6;
+}
+
+    .updatePassword--header i:hover {
+        opacity: 1;
+    }
+
+

@@ -11,6 +11,7 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using Dcontact.Data;
+using Dcontact.Pages.Shared;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,6 +23,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Dcontact.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<UserIdentity> _signInManager;
@@ -31,6 +33,7 @@ namespace Dcontact.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly Web_ProjectContext _cotext;
+        public _ModelPopup Popup; //popup
 
         public RegisterModel(
             Web_ProjectContext context,
@@ -47,6 +50,8 @@ namespace Dcontact.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _cotext = context;
+            Popup = new _ModelPopup();
+
         }
 
         /// <summary>
@@ -78,6 +83,17 @@ namespace Dcontact.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            /// 
+            [Required]
+            [RegularExpression("[a-zA-Z0-9]{2,30}", ErrorMessage = "The UserName invalid")]
+            [Display(Name = "UserName")]
+            public string UserName { get; set; }
+
+            /// <summary>
+            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///     directly from your code. This API may change or be removed in future releases.
+            /// </summary>
+            /// 
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -118,7 +134,7 @@ namespace Dcontact.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -127,6 +143,7 @@ namespace Dcontact.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    await _userManager.AddToRoleAsync(user, "User");
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
@@ -139,6 +156,9 @@ namespace Dcontact.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
+                         _cotext.CreateDcontact(user);
+                        _userManager.AddToRoleAsync(user, "User").Wait();
+                        //create default dcontact for new user
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
                     else
@@ -146,11 +166,15 @@ namespace Dcontact.Areas.Identity.Pages.Account
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
+                    
                 }
+
                 foreach (var error in result.Errors)
                 {
+                    Popup.Message += $"\n {error.Description}";
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+
             }
 
             // If we got this far, something failed, redisplay form

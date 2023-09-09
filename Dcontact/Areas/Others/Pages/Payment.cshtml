@@ -1,0 +1,222 @@
+﻿@page
+@using Dcontact.Data
+@using Microsoft.AspNetCore.Identity;
+@model Dcontact.Areas.Others.Pages.PaymentModel
+@inject UserManager<UserIdentity> UserManager;
+@inject SignInManager<UserIdentity> SignInManager;
+@{
+    ViewData["Title"] = "Payment";
+    Layout = "/Pages/Shared/_Layout.cshtml";
+    var userIdentity = await UserManager.GetUserAsync(User);
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/payment.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dteam.css" asp-append-version="true" />
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+                }
+    <div class="dteam">
+        <div class="dteam">
+            <ul class="main-nav">
+                <li class="item1">
+                    <div class="bg"><img src="~/assets/d1.avif" alt="" /></div>
+                </li>
+                <li class="item2">
+                    <div class="bg"><img src="~/assets/d2.avif" alt="" /></div>
+                </li>
+                <li class="item3">
+                    <div class="bg">
+                        <img src="~/assets/Asset 3Dcontact.png" />
+                    </div>
+                </li>
+                <li class="item4">
+                    <div class="bg"><img src="~/assets/d4.avif" alt="" /></div>
+                </li>
+                <li class="item5">
+                    <div class="bg"><img src="~/assets/d5.jpg" alt="" /></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <form id="paymentForm" method="post" asp-page-handler="AddPayment" asp-page="Payment">
+        <input type="hidden" asp-for="Input.FrontCard" />
+        <input type="hidden" asp-for="Input.BackCard" />
+    <div class="payment__container">
+        <!-- PAYMENT INFORMATION -->
+        <div class="paymentInformation">
+            <div class="paymentInformation__title">Payment Information</div>
+            <div class="paymentInformation__userInfo">
+                <div class="inputBox">
+                        @*<span asp-validation-for="Input.Address" class="validation" id="username--validation"></span>*@
+                        <i class="fa-solid fa-circle-exclamation iconValidation" id="iconValidation-address"></i>
+                    <input asp-for="Input.Address"
+                       type="text"
+                       class="userInfo__input"
+                       id="userInfo__input--address"
+                        />
+                    <span asp-for="Input.Address" class="input__label" id="input__label--address">Address</span>
+                </div>
+
+                <div class="inputBox">
+                        @*<span asp-validation-for="Input.Phone" class="validation" id="username--validation"></span>*@
+                        <i class="fa-solid fa-circle-exclamation iconValidation" id="iconValidation-phone" ></i>
+
+                    <input asp-for="Input.Phone"
+                       type="text"
+                       class="userInfo__input"
+                       id="userInfo__input--numberPhone"
+                        />
+                    <span asp-for="Input.Phone"
+                      for="numberPhone"
+                      class="input__label"
+                      id="input__label--numberPhone">Phone</span>
+                </div>
+            </div>
+            <div class="paymentInformation__title">Credit Information</div>
+            <div class="creditCard__numberCard">
+                    @*<span asp-validation-for="Input.NumberCard" class="validation" id="username--validation"></span>*@
+                    <i class="fa-solid fa-circle-exclamation iconValidation" id="iconValidation-numbercard"></i>
+
+                <input asp-for="Input.NumberCard"  type="text" id="numberCard__input"/>
+                <span asp-for="Input.NumberCard">Number Card</span>
+            </div>
+            <div class="creditCard__detailInfo">
+                <div class="inputDetailGroup">
+                        @*<span asp-validation-for="Input.ExpirationDate" class="validation" id="username--validation"></span>*@
+                        <i class="fa-solid fa-circle-exclamation iconValidation" id="iconValidation-expiration"></i>
+
+                    <input asp-for="Input.ExpirationDate"
+                       type="text"
+                       id="detailInfo__input--expiration"
+                       class="detailInfo__input"
+                        />
+                    <span asp-for="Input.ExpirationDate">Expiration Date</span>
+                </div>
+
+                <div class="inputDetailGroup">
+                        @*<span asp-validation-for="Input.CVC" class="validation" id="username--validation"></span>*@
+                        <i class="fa-solid fa-circle-exclamation iconValidation" id="iconValidation-cvc"></i>
+
+                    <input asp-for="Input.CVC"
+                       type="text"
+                       id="detailInfo__input--cvc"
+                       class="detailInfo__input"
+                       maxlength="3"
+                        />
+                    <span asp-for="Input.CVC">CVC</span>
+                </div>
+                <div class="inputDetailGroup">
+                        @*<span asp-validation-for="Input.Quantity" class="validation" id="username--validation"></span>*@
+                        <i class="fa-solid fa-circle-exclamation iconValidation" id="iconValidation-quantity"></i>
+                    <input asp-for="Input.Quantity"
+                       type="number"
+                       id="detailInfo__input--quantity"
+                       class="detailInfo__input"
+                       minlength="1"
+                        />
+                    <span asp-for="Input.Quantity">Quantity</span>
+                </div>
+            </div>
+
+            <div class="orderBtn">
+                <button type="submit" class="btnPayment">PAYMENT NOW</button>
+            </div>
+        </div>
+        <!-- PREVIEW ORDER CARD -->
+        <div class="orderCard__preview">
+            <div class="frontCard__preview">
+                <img src="@ViewBag.frontcard"
+                 alt="front card preview"
+                 class="cardPreview__img"
+                 id="frontCard__preview" />
+                <span>Front Card</span>
+            </div>
+            <div class="backCard__preview">
+                <img src="@ViewBag.backcard"
+                 alt="front card preview"
+                 class="cardPreview__img"
+                 id="backCard__preview" />
+                <span>Back Card</span>
+            </div>
+            <div class="backCard__preview"></div>
+        </div>
+    </div>
+
+    <div class="overlay__popupPayment">
+        <div class="popupPayment__container">
+            <!-- SHOPPING CART -->
+            <div class="popupPayment__shoppingCart">
+                <div class="popupPayment__title">Shopping Cart</div>
+                <div class="popupPayment__detail" id="shoppingCart--detail">
+                    <div class="item--detail">
+                        <span class="detail--title">Cost</span>
+                        <span class="detail--amount" id="cost"></span>
+                    </div>
+                    <div class="item--detail">
+                        <span class="detail--title">Quantity</span>
+                        <span class="detail--amount" id="quantity"></span>
+                    </div>
+                    <div class="item--detail">
+                        <span class="detail--tilte">Total</span>
+                        <span class="detail--amout" id="total"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- CONFIRM INFORMATION -->
+            <div class="popupPayment__confirmInfo">
+                <div class="popupPayment__title">Confirm Information</div>
+                <div class="popupPayment__detail">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                    <div class="item--detail">
+                        <span class="detail--title">Email</span>
+                        <span class="detail--info">@userIdentity.Email</span>
+                    </div>
+                    }
+                <div class="item--detail">
+                        <span class="detail--title" >Address</span>
+                        <span class="detail--info" id="address"></span>
+                    </div>
+                    <div class="item--detail">
+                        <span class="detail--title" >Phone</span>
+                        <span class="detail--info" id="phone"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="popupPayment__btn">
+                <button type="submit" id="popupPayment__btn--cancel">CANCEL</button>
+                <button type="submit" id="popupPayment__btn--confirm" >CONFIRM</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+    <!-- ERROR POPUP -->
+    <div id="paymentPopup">
+        <div class="popup__container">
+            <div class="popup__header">
+                <i id="closePopup" class="fa-regular fa-circle-xmark"></i>
+            </div>
+            <div class="popup__detail">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div class="popup__detail--content">
+                    <span class="errorContent"></span>
+                </div>
+            </div>
+            <div class="popup__footer">
+                <button class="btnClosePopup">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/payment.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+}

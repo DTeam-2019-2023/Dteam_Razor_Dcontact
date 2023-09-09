@@ -1,0 +1,52 @@
+﻿@page "/{username?}"
+@using Dcontact.Data
+@model Dcontact.Areas.Dcontact.Pages.Guest.GuestModel
+@{
+    Layout = "/Pages/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/guest.css" asp-append-version="true" />
+}
+<input type="hidden" id="username" value="@Model.Username"></input>
+    <div class="guest__container">
+        <div class="guest__container--content">
+            <div class="guest__card"
+             style="background-image: url('@Model.Template.IdBackGroundNavigation.PictureLocation');">
+                <div class="guest__card--content">
+                    <div class="card__content--avt">
+                        <img src="@Model.Template.IdAvatarNavigation.PictureLocation" alt="Avatar User" id="avtUser" />
+                    </div>
+                    <div class="card__content--username">
+                            <span>@Model.Username</span>
+                    </div>
+                    <div class="card__content--rowList">
+                    @foreach (var row in Model.Template.TbRowDesigns)
+                    {
+                        <div class="card__content--rowItem" idRowContent="@row.IdRowContentNavigation.Id" style="background-color: @row.RowColor">
+                            <div class="row_container">
+                                <span><i class="@row.Bullet"></i></span>
+                                <label style="font-family: @row.Font">@row.IdRowContentNavigation.Text</label>
+                            </div>
+                                <span class="errorIcon">
+                                <a href="/Dcontact/guest/report?idrow=@(row.IdRowContentNavigation.Id)&username=@(Model.Username)">
+                                    <i class="fa fa-exclamation-triangle"></i></a>
+                                </span>
+                        </div>
+                    }
+                </div>
+                <div class="card__content--footer">
+                    <img src="~/assets/logo_full.svg" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="guest__footer">
+        <span>Create your unique card <a id="backHome">here</a></span>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/guest.js"></script>
+}

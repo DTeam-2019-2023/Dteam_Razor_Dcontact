@@ -1,0 +1,47 @@
+﻿@page
+@model Dcontact.Pages.Lockout
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        .banNoti {
+            font-family: sans-serif;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+            .banNoti h2 {
+                color: red;
+                font-size: 4em;
+                margin: 0;
+                text-align: center;
+            }
+
+            .banNoti span {
+                letter-spacing: 0.5em;
+            }
+
+        mark {
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 19px;
+        }
+    </style>
+</head>
+<body>
+    <div class="banNoti">
+        <h2>ERROR</h2>
+
+        <span><mark>YOUR ACCOUNT IS BANNED</mark></span>
+    </div>
+</body>
+</html>

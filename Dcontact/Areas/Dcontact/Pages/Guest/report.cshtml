@@ -1,0 +1,65 @@
+﻿@page
+@model Dcontact.Areas.Dcontact.Pages.ReportModel
+@{
+    ViewData["Title"] = "Report";
+    Layout = "/Pages/Shared/_LayoutNull.cshtml";
+}
+
+@section Styles{
+        <link rel="stylesheet" href="~/css/report.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/dteam.css" asp-append-version="true" />
+ }
+
+      <div class="dteam">
+                <div class="dteam">
+                    <ul class="main-nav">
+                        <li class="item1">
+                            <div class="bg"><img src="~/assets/d1.avif" alt="" /></div>
+                        </li>
+                        <li class="item2">
+                            <div class="bg"><img src="~/assets/d2.avif" alt="" /></div>
+                        </li>
+                        <li class="item3">
+                            <div class="bg">
+                                <img src="~/assets/Asset 3Dcontact.png" />
+                            </div>
+                        </li>
+                        <li class="item4">
+                            <div class="bg"><img src="~/assets/d4.avif" alt="" /></div>
+                        </li>
+                        <li class="item5">
+                            <div class="bg"><img src="~/assets/d5.jpg" alt="" /></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        <div class="report__container">
+          <div class="report--header">
+            <img src="~/assets/Asset 3Dcontact.png" alt="logo" class="logo" />
+            <i class="fa-regular fa-circle-xmark"></i>
+          </div>
+          <div class="report--title">
+            <span>Report Form</span>
+          </div>
+          <form method="post">
+
+          <div class="report--input">
+            <input type="hidden" asp-for="_RowContentId"/>
+            <input type="text" class="username" placeholder="@Model._UserName" asp-for="_UserName" readonly />
+            <input type="text" class="socialname" placeholder="@Model._SocialName" readonly />
+            <textarea cols="30" rows="10" asp-for="Description" name="description" placeholder="Description..."></textarea>
+          </div>
+
+          <div class="report--btn">
+            <button type="submit" class="btn-report">REPORT</button>
+          </div>
+          </form>
+        </div>
+    <partial name="_ModelPopup" model="Model.Popup" />
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+        <script src="~/js/report.js"></script>
+}

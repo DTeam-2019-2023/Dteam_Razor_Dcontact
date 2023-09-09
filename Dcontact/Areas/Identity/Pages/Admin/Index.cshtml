@@ -1,0 +1,192 @@
+﻿@page
+@model Dcontact.Areas.Identity.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    Layout = "/Pages/Shared/_Layout.cshtml";
+    var Users = Model.UserIdentities;
+    var Reports = Model.Reports;
+    var Click = Model.numberClicks;
+    var View = Model.numberViews;
+    var NumberAsscess = Model.numberAsscess;
+
+
+}
+@section Styles{
+    <link rel="stylesheet" href="~/css/admin.css" />
+}
+        <div class="body">
+            <div class="body__left">
+                <div class="sidebar__list">
+                    <div class="sidebar__item btn1 active">
+                        <span class="sidebar__item-name">upi & statistical</span>
+                        <i class="fa-solid fa-chart-gantt"></i>
+                    </div>
+                    <div class="sidebar__item dropdown">
+                        <span class="sidebar__item-name">censorship</span>
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                </div>
+                <div class="sidebar__list-sub">
+                    <div class="sidebar__item-sub btn2">
+                        <span class="sidebar__item-sub-name">report</span>
+                        <i class="fa-solid fa-bullhorn"></i>
+                    </div>
+                    <div class="sidebar__item-sub btn3">
+                        <span class="sidebar__item-sub-name">block</span>
+                        <i class="fa-solid fa-user-large-slash"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="body__right">
+                <!-- Statistical -->
+            <h4>@ViewData["Title"]</h4>
+                <div class="bxstatistical show">
+                    <div class="statistical__list">
+                        <div class="statistical__item">
+                            <div class="statistical__item-info">
+                            <p class="statistical__item-info-number"></p>
+                                <p class="statistical__item-info-title">access</p>
+                            </div>
+                            <div class="statistical__item-icon">
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                        </div>
+                        <div class="statistical__item">
+                            <div class="statistical__item-info">
+                            <p class="statistical__item-info-number">@View</p>
+                                <p class="statistical__item-info-title">view</p>
+                            </div>
+                            <div class="statistical__item-icon">
+                                <i class="fa-solid fa-eye"></i>
+                            </div>
+                        </div>
+                        <div class="statistical__item">
+                            <div class="statistical__item-info">
+                                <p class="statistical__item-info-number">@Users.Count()</p>
+                                <p class="statistical__item-info-title">user</p>
+                            </div>
+                            <div class="statistical__item-icon">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="statistical__item">
+                            <div class="statistical__item-info">
+                                <p class="statistical__item-info-number">@Click</p>
+                                <p class="statistical__item-info-title">click</p>
+                            </div>
+                            <div class="statistical__item-icon">
+                                <i class="fa-solid fa-arrow-pointer"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="statistical__table-name">User's personal information</h3>
+                    <div class="statistical__dropdown">
+                        <table class="statistical__table">
+                            <thead>
+                                <tr>
+                                    <th>username</th>
+                                    <th>email</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <partial name="_UserList" />
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Report -->
+                <div class="bxreport">
+                    <h3 class="bxreport-title">Report</h3>
+                    <div class="report__dropdown">
+                        <table class="report__table">
+                            <thead>
+                                <tr>
+                                    <th>ID Row</th>
+                                    <th>ID User</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @{
+                            if(Reports != null){
+                                foreach (var report in Reports)
+                                {
+                                    if(!report.Status){
+                                        <tr id="@report.Id">
+                                            <td id="IdRow">@report.IdRow</td>
+                                            <td id="IdUser">@report.IdUser</td>
+                                            <td class="report__table-item-link">@report.Description</td>
+                                            <td>
+                                                <span class="report__table-item-btn success">
+                                                    accept
+                                                    <i class="fa-regular fa-circle-check"></i>
+                                                </span>
+
+                                                <span class="report__table-item-btn decline">
+                                                    decline
+                                                    <i class="fa-regular fa-circle-xmark"></i>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Block -->
+                <div class="bxblock">
+                    <h3 class="block__table-name">Lock the offering account</h3>
+                    <div class="block__dropdown">
+                        <table class="block__table" id="table_ban">
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>username</th>
+                                    <th>email</th>
+                                    <th>action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody_ban">
+                                @{
+                                    if(Users != null)
+                                    foreach(var user in Users){
+                                        //check if user is banned
+                                        if(user.isBan){
+                                            <tr>
+                                            <td id="IdUser">@user.Id</td>
+                                                <td>@user.UserName</td>
+                                                <td class="block__table-item-link">@user.Email</td>
+                                                <td>
+                                                    <!--  <span class="block__table-item-btn">
+                                                        Block
+                                                        <i class="fa-solid fa-ban"></i>
+                                                    </span>-->
+                                                    <span class="block__table-item-btn unblock">
+                                                        UnBlock
+                                                        <i class="fa-solid fa-lock-open"></i>
+                                                    </span>
+                                                </td>
+                                        </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/admin.js"></script>
+    <script src="~/js/signalr/dist/browser/signalr.js"> </script>
+    <script src="~/js/Hub/HubAdmin.js"></script>
+
+
+}

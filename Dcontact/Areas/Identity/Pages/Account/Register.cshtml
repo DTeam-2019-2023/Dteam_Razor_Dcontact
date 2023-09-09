@@ -2,66 +2,88 @@
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
+    Layout = "/Pages/Shared/_LayoutNull.cshtml";
 }
 
-<h1>@ViewData["Title"]</h1>
+@section Styles{
+        <link rel="stylesheet" href="~/css/signup.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/dteam.css" asp-append-version="true" />
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+ }
 
-<div class="row">
-    <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
-            <hr />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating">
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
-                <label asp-for="Input.Email"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-floating">
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Input.Password"></label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-floating">
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
-                <label asp-for="Input.ConfirmPassword"></label>
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
+    @*DTEAM IMAGE BACKGROUND*@
+        <div class="dteam">
+            <ul class="main-nav">
+                <li class="item1">
+                    <div class="bg"><img src="~/assets/d1.avif" alt="" /></div>
+                </li>
+                <li class="item2">
+                    <div class="bg"><img src="~/assets/d2.avif" alt="" /></div>
+                </li>
+                <li class="item3">
+                    <div class="bg">
+                        <img src="~/assets/Asset 3Dcontact.png" />
                     </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
-    </div>
-</div>
+                </li>
+                <li class="item4">
+                    <div class="bg"><img src="~/assets/d4.avif" alt="" /></div>
+                </li>
+                <li class="item5">
+                    <div class="bg"><img src="~/assets/d5.jpg" alt="" /></div>
+                </li>
+            </ul>
+        </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <div class="signup__container">
+          <div class="signup--title">
+            <span>Signup</span>
+          </div>
+          <div class="signup--ques">
+            <span>Have already an account?</span>
+            <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Login here</a>
+          </div>
+          <!-- signup form -->
+          <div class="signup--input">
+            <div class="input--valid input--username">
+                 <span asp-validation-for="Input.UserName" class="validation" id="username--validation"></span>
+                <input asp-for="Input.UserName" class="username" autocomplete="username" aria-required="true" placeholder="Username" />
+
+                    </div>
+                    <div class="input--valid input--email">
+                        <span asp-validation-for="Input.Email" class="validation" id="email--validation"></span>
+                        <input asp-for="Input.Email" class="email" autocomplete="username" aria-required="true" placeholder="Email" />
+
+                    </div>
+                    <div class="input--valid input--password">
+                        <span asp-validation-for="Input.Password" class="validation" id="password--validation"></span>
+                        <input asp-for="Input.Password" class="password" autocomplete="new-password" aria-required="true" placeholder="Password" />
+
+                    </div>
+                    <div class="input--valid input--repassword">
+                        <span asp-validation-for="Input.ConfirmPassword" class="validation" id="repassword--validation"></span>
+                        <input asp-for="Input.ConfirmPassword" class="repassword" aria-required="true" placeholder="Re-Password" />
+
+
+                    </div>
+                </div>
+
+                <div class="signup--btn">
+                    <button class="btn-signup-pagesignup" type="submit">Signup</button>
+                </div>
+            </div>
+        </form>
+  
+@if (ModelState.Count > 0 && !ModelState.IsValid && Model.Popup is not null)
+{
+    <partial name="_ModelPopup" model="Model.Popup" />
+}
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/site.js"></script>
 }

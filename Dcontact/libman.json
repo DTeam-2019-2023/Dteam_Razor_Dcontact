@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "cdnjs",
+      "library": "croppie@2.6.5",
+      "destination": "wwwroot/lib/croppie/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "@microsoft/signalr@latest",
+      "destination": "wwwroot/js/signalr",
+      "files": [
+        "dist/browser/signalr.js",
+        "dist/browser/signalr.js"
+      ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "html2canvas@1.4.1",
+      "destination": "wwwroot/js/html2canvas"
+    }
+  ]
+}

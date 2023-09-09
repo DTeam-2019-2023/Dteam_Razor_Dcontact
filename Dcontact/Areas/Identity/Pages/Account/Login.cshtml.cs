@@ -15,18 +15,32 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Dcontact.Data;
+using Microsoft.Win32;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Dcontact.Pages.Shared;
+using Json;
+using Dcontact.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Dcontact.Areas.Identity.Pages.Account
 {
+    [AllowAnonymous]
     public class LoginModel : PageModel
     {
         private readonly SignInManager<UserIdentity> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        public _ModelPopup Popup; //popup
+        private readonly IHubContext<HubUser> _hubContext;
 
-        public LoginModel(SignInManager<UserIdentity> signInManager, ILogger<LoginModel> logger)
+
+        public LoginModel(SignInManager<UserIdentity> signInManager, ILogger<LoginModel> logger, IHubContext<HubUser> hubContext)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _hubContext = hubContext;
+
         }
 
         /// <summary>
@@ -66,8 +80,8 @@ namespace Dcontact.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            [RegularExpression(@"^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$", ErrorMessage = "Invalid username")]
+            public string Username { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -84,11 +98,14 @@ namespace Dcontact.Areas.Identity.Pages.Account
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
-
         public async Task OnGetAsync(string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
+                Popup = new _ModelPopup
+                {
+                    Message = ErrorMessage
+                };
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
@@ -102,8 +119,12 @@ namespace Dcontact.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
+        
+
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            if (_signInManager.IsSignedIn(User)) return Redirect("/Dcontact/User/EditDcontact");
+
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -112,12 +133,26 @@ namespace Dcontact.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+                // ? which kind of hash functvarion? salt?
+                var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    var user = await _signInManager.UserManager.FindByNameAsync(Input.Username);
+                    if (user.isBan) return RedirectToPage("/Lockout");
+                    if (_signInManager.UserManager.IsInRoleAsync(user, "Admin").Result )
+                    {
+                        returnUrl = "/Identity/Admin";
+                    }
+                    else if(_signInManager.UserManager.IsInRoleAsync(user, "User").Result )
+                    {
+                        await _hubContext.Clients.All.SendAsync("ReceiveUser");
+                        returnUrl = "/Dcontact/User/EditDcontact";
+                    }
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
+
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
@@ -129,6 +164,11 @@ namespace Dcontact.Areas.Identity.Pages.Account
                 }
                 else
                 {
+                    //pupup
+                    Popup = new _ModelPopup 
+                    {
+                        Message = "Invalid login attempt."
+                    };
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }

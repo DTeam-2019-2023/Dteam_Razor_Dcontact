@@ -1,0 +1,19 @@
+{
+  "tbAvatar": {
+    "PictureLocation": "https://lh3.googleusercontent.com/drive-viewer/AJc5JmThjbx3hBT74OPzJIDosAfXnz9aLccCh6oBzhP9mT8bMnDaUckfq94uHDbJzaO2m7rhGFohL-w=w1919-h950"
+  },
+  "tbBackGround": {
+    "PictureLocation": "#fff"
+  },
+  "tbRowDesign": {
+    "font": "serif",
+    "rowColor": "#2a3e98",
+    "bullet": ""
+  },
+  "tbTemplate": {
+    "IDAvatar": "default",
+    "IDBackGround": "default",
+    "isApply": true
+  }
+}
+}

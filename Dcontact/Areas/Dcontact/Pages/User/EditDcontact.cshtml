@@ -1,0 +1,366 @@
+﻿@page
+@using Dcontact.Data
+@model Dcontact.Areas.Dcontact.Pages.EditDcontactModel
+@{
+    TbDcontact Dcontact = Model.Dcontact;
+    ICollection<TbTemplate> Templates = Model.ListTemplate;
+    Layout = "/Pages/Shared/_Layout.cshtml";
+    TbTemplate templateApply = Templates.FirstOrDefault(e => e.IsApply == true);
+    var rows = Model.ListRowContent.Join(templateApply.TbRowDesigns, c => c.Id, t => t.IdRowContent, (c, t) => new { id = c.Id, text = c.Text, link = c.Link, code = c.Code, birth = c.Birth, click = c.Click, font = t.Font, color = t.RowColor, bullet = t.Bullet }).ToList();
+}
+
+@section Styles{
+                            <link rel="stylesheet" href="~/css/edit.css" />
+    @* <link rel="stylesheet" 
+      href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css" />*@           
+                            <link rel="preconnect" href="https://fonts.googleapis.com" />
+                            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+                            <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,600&display=swap"
+      rel="stylesheet" />
+        <link rel="stylesheet" href="~/lib/croppie/croppie.css" />
+
+}
+
+                        <div class="container">
+                              <div class="edit-page">
+                                <!-- Action -->
+                                <div class="action__list">
+                                  <div class="action__item template active">
+                                    <i class="fa-solid fa-synagogue"></i>
+                                    <p class="action__item-name">Template</p>
+                                  </div>
+                                  <div class="action__item avatar">
+                                    <i class="fa-solid fa-user-plus"></i>
+                                    <p class="action__item-name">Avatar</p>
+                                  </div>
+                                  <div class="action__item background">
+                                    <i class="fa-regular fa-image"></i>
+                                    <p class="action__item-name">Background</p>
+                                  </div>
+                                  <div class="action__item properties">
+                                    <i class="fa-brands fa-creative-commons-by"></i>
+                                    <p class="action__item-name">Properties</p>
+                                  </div>
+                                </div>
+                                <!-- Content -->
+                                <div class="content">
+                                  <div class="section__box">
+                                    <div class="section__box-left">
+                                        <!-- Template -->
+
+                        <div class="template__content show">
+                            <h2 class="section__title">Template</h2>
+                            <div class="template__list">
+                            @foreach (var template in Templates)
+                            {
+                                    <div class="overlay__template--list-item" idTemplate="@template.Id" idBackground="@template.IdBackGround">
+                                            <div class="delTemp"><i class="fa fa-regular fa-trash-can"></i></div>
+                                            <div class="template__list-item" style="background-image: url('@template.IdBackGroundNavigation.PictureLocation');">
+                                            <img class="template__list-avt" idAvatar="@template.IdAvatar"
+                                           src="@template.IdAvatarNavigation.PictureLocation" />
+                                        @foreach (var row in template.TbRowDesigns)
+                                        {
+                                                     <div class="template__list-item-row" id="@row.Id" style="background-color: @row.RowColor"></div>
+                                        }
+                                        </div>
+                                        <div class="template__item-name">@template.Name</div>
+                                    </div>
+
+                            }
+                            @* ADD NEW TEMPLATE*@   
+                                <div class="overlay__template--list-item">
+                                    <div class="template__list-item" id="addNewTemplate">
+                                        <button class="btn__addNew-template"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                        <div class="template__item-nameAdd">Add New Template</div>
+                                </div>
+                            </div>
+                        @* MODAL ADD NEW TEMPLATE *@
+                        <div class="modal__overlay">
+                            <div class="template__addnew">
+                                <h3 class="modal__title">
+                                    Create New Template
+                                    <i class="fa-regular fa-circle-xmark"></i>
+                                </h3>
+                                <div class="template__addnew-control">
+                                    <label
+                                        asp-for="Input.Name"
+                                        class="template__addnew-control-title">
+                                        Template Name
+                                    </label>
+                                    <input
+                                        asp-for="Input.Name"
+                                        id="template_name"
+                                        type="text"
+                                        class="template__addnew-control-inp"
+                                        placeholder="Enter name template..."
+                                    />
+                                </div>
+                                <button type="submit" id="btnApplyNewTemplate" class="section__btn btn__apply btn__pos-center">
+                                    <i class="fa-solid fa-check"></i>
+                                    Apply
+                                </button>
+                            </div>
+                        </div>
+                     </div>
+                                    <!-- Avatar -->
+                                    <div class="avatar__content">
+                                        <h2 class="section__title">Change Avatar</h2>
+                                        <div class="avatarBtn">
+                                            <label for="selectAvt">+ Select Picture</label>
+                                            <input type="file" id="selectAvt" />
+                                        </div>
+
+                                          <div class="overlay__avatar-box">
+                                            <div class="avatar__box-content">
+                                                <div class="avatar__helper">
+                                                    <i class="fa-solid fa-arrow-up"></i>
+                                                    <span>CLICK HERE TO DESIGN YOUR AVATAR</span>
+                                                </div>
+                                                <div class="avatar_croppie"></div>
+                                            </div>
+                                           <div class="sectionBtn" id="btnApplyAvt">
+                                                <a class="section__btn btn__apply" id="applyAvt">
+                                                <i class="fa-solid fa-check"></i>
+                                                Apply
+                                                </a>
+                                            </div>
+                                        </div>
+@*
+                                        <div class="avatar__box" id="">
+                                            <div class="avatar_croppie"></div>
+                                        </div>
+                                        <div class="sectionBtn">
+                                            <a class="section__btn btn__apply">
+                                            <i class="fa-solid fa-check"></i>
+                                            Apply
+                                            </a>
+                                        </div>    *@                          
+                            </div>                                                   <!-- Background -->
+                                        <div class="background__content">
+                                        <h2 class="section__title">Change Background</h2>
+                                        <div class="backgroundBtn">
+                                            <label for="selectBg">+ Select Picture</label>
+                                            <input type="file" id="selectBg" accept="image/*" />
+                                        </div>
+                                          <div class="background__helper">
+                                                    <i class="fa-solid fa-arrow-up"></i>
+                                                    <span>CLICK HERE TO DESIGN YOUR BACKGROUND</span>
+                                          </div>
+                                        <div class="overlay__background-box">
+                                            <div class="background__box-content">
+                                                <div class="background_croppie"></div>
+                                           <div class="sectionBtn" id="btnApplyBg">
+                                                <a class="section__btn btn__apply" id="applyBg">
+                                                <i class="fa-solid fa-check"></i>
+                                                Apply
+                                                </a>
+                                            </div>
+                                            </div>
+                                        </div>
+                                                                                    @*<div class="modal__background__overlay"></div>
+                                                                                    <div class="change__background">
+                                                                                      <h3 class="modal__title">
+                                                                                        Crop Background
+                                                                                        <i class="fa-regular fa-circle-xmark"></i>
+                                                                                      </h3>
+                                                                                      <div class="crop__background-box">
+                                                                                        <img
+                                                                      src="../assets/edit_background_crop.png"
+                                                                      alt="Edit Crop Background"
+                                                                      class="crop__background"
+                                                                    />
+                                                                                      </div>
+                                                                                      <a class="section__btn btn__save btn__pos-right">
+                                                                                        <i class="fa-solid fa-check"></i>
+                                                                                        Save
+                                                                                      </a>
+                                                                                      <a class="section__btn btn__cancel btn__pos-right">
+                                                                                        <i class="fa-solid fa-check"></i>
+                                                                                        Cancel
+                                                                                      </a>
+                                                                                    </div>*@
+                                                                                  </div>
+                        
+                          <!-- Properties -->
+                            <div class="properties__content" target=" ">
+                            <h2 class="section__title">Properties</h2>
+                            <div class="properties__list">
+                            <div class="properties__control">
+                              <label for="properties-name" class="properties__control-title">Text</label>
+                              <input
+                                id="properties-name"
+                                type="text"
+                                class="properties__control-input"
+                                placeholder="First row text"
+                              />
+                            </div>
+                            <div class="properties__control" target="">
+                              <label for="properties-link" class="properties__control-title"
+                                >Link</label
+                              >
+                              <input
+                                id="properties-link"
+                                type="text"
+                                class="properties__control-input"
+                                placeholder="First row link"
+                              />
+                            </div>
+                            <div class="properties__control">
+                              <label class="properties__control-title bulletResult"
+                                >Icons</label>
+                                <div class="overlay__icon-list">
+                                  <div class="icon__list">
+                                        @foreach (var icon in Model.ICON_LIST)
+                                        {
+                                                      <div class="icon__item">
+                                                        <i class="@icon"></i>
+                                                      </div>
+                                        }
+                                  </div>
+                                  <div class="icon__list-btn">
+                                    <span class="icon__list-btnUp"><i class="fa-solid fa-caret-up"></i></span>
+                                    <span class="icon__list-btnDown"><i class="fa-solid fa-caret-down"></i></span>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="properties__control" id="colorPickerBox">
+                              <label class="properties__control-title"
+                                >Background Color Tag</label>
+                                <div class="container__colorPicker">
+                                    <abbr title="Click to choose row color">
+                                        <i class="fa-solid fa-eye-dropper" id="colorPickericon"></i>
+                                    </abbr>  
+                                </div>
+                              <input
+                                id="colorpicker"
+                                type="color"    
+                                class="properties__control-colorpicker"
+                                value="#ff7c7c"
+                              />
+                            </div>
+                            <div class="properties__control">
+                              <label for="text-font" class="properties__control-title"
+                                >Text Font</label
+                              >
+                              <select
+                                name="text-font"
+                                id="text-font"
+                                class="properties__control-select">
+                                    @foreach (var font in Model.FONT_LIST)
+                                    {
+                                        <option value="@font">@font</option>
+                                    }
+                              </select>
+                            </div>
+                            <!-- <a class="section__btn btn__edit-properties btn__pos-center">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Edit row
+                                    </a> -->
+                            <div class="properties__control">
+                              <div class="properties__control-label">
+                                <label class="switch">
+                                  <input
+                                    type="checkbox"
+                                    class="btn__set-code"
+                                    id="toggleCode"
+                                  />
+                                  <span class="slider round"></span>
+                                </label>
+                                <label
+                                  for="properties-code"
+                                  class="properties__control-title1"
+                                  >Set code</label
+                                >
+                              </div>
+                              <div class="form__set-code">
+                                <input
+                                  id="properties-code"
+                                  type="text"
+                                  class="form__set-code-input"
+                                  placeholder="Enter code..."
+                                  min="1000"
+                                  max="9999"
+                                  code=""
+                                />
+                                <input type="button" value="Apply" class="section__btn btn__apply btn_apply_setCode">
+                              </div>
+                            </div>
+                            <div class="properties__control">
+                              <div class="properties__control-label">
+                                <label class="switch">
+                                  <input
+                                    type="checkbox"
+                                    class="btn__set-birthday"
+                                    id="toggleAge"
+                                  />
+                                  <span class="slider round"></span>
+                                </label>
+                                <label class="properties__control-title1"
+                                  >Set birthday</label
+                                >
+                              </div>
+                              <div class="form__set-birthday">
+                                <div class="form__set-birthday-box">
+                                  <input
+                                    class="form__set-birthday-input"
+                                    type="text"
+                                    id="datepicker"
+                                    placeholder="Enter day of birth..."
+                                  />
+                                </div>
+                                <input type="button" value="Apply" class="section__btn btn__apply btn_apply_setDate">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="section__box-right">
+                            <div class="box__top box__properties" idBackground="@templateApply.IdBackGround" id="dcontact" 
+                            idTemplate="@templateApply.Id"
+                                 style="background-image: url('@templateApply.IdBackGroundNavigation.PictureLocation')"   >
+                        <div class="properties__avatar-box">
+                                    <img src="@templateApply.IdAvatarNavigation.PictureLocation" class="box__avt-img" idAvt="@templateApply.IdAvatar"/>
+                    </div>
+                    <div class="list">
+                            @foreach (var row in rows)
+                            {
+                            <div class="item" idRowContent="@row.id" rowLink="@row.link" style="background-color: @row.color" rowCode="@row.code" rowBirth="@row.birth">
+                                <i class="@row.bullet"></i>
+                                <div class="item__content">
+                                    <label class="item__content--text" style="font-family: @row.font">@row.text</label>
+                                </div>
+                                <span><i class="fa fa-regular fa-trash-can"></i></span>
+                            </div>
+                            }
+                        <div class="add__row plus">
+                            <i class="fa fa-solid fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="box__logo">
+                        <img src="~/assets/logo_full.svg" alt="Logo" />
+                    </div>
+                    </div>
+                    <div class="btn__dn active">
+                    <a class="section__btn btn__apply btn__apply-Template" id="applyTemp" disabled="disabled"> Apply </a>
+                    <a class="section__btn btn__close" id="cancelTemp"> Cancel </a>
+                    </div>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+@section Scripts {
+                                <partial name="_ValidationScriptsPartial" />
+                                <script src="~/js/edit.js"></script>
+                                <script src="~/lib/croppie/croppie.js"></script>
+                                <script src="~/js/cropImageDcontact.js"></script>
+                            <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
+    <script src="~/js/signalr/dist/browser/signalr.js"> </script>
+
+    <script src="~/js/Hub/HubAdmin.js"></script>
+
+
+}

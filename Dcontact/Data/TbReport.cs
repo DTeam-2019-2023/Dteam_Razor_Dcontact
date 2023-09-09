@@ -5,6 +5,7 @@ namespace Dcontact.Data
 {
     public partial class TbReport
     {
+        public string Id { get; set; } = null!;
         public string IdRow { get; set; } = null!;
         public string IdUser { get; set; } = null!;
         public string Description { get; set; } = null!;

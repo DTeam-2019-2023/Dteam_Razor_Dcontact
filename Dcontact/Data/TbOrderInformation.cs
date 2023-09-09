@@ -10,7 +10,7 @@ namespace Dcontact.Data
         public string Address { get; set; } = null!;
         public string Phone { get; set; } = null!;
         public decimal ExportPrice { get; set; }
-        public string PitureLocation { get; set; } = null!;
+        public string? PitureLocation { get; set; } = null!;
 
         public virtual UserIdentity IdUserIdentityNavigation { get; set; } = null!;
 

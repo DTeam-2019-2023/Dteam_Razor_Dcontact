@@ -2,25 +2,35 @@
 @inject SignInManager<UserIdentity> SignInManager
 @inject UserManager<UserIdentity> UserManager
 
-<ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post" >
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+
+
+    <div class="header__btn">
+        @if (!User.IsInRole("Admin"))
+        {
+            <a href="/Others/Dcard/dcard">
+                <div class="btn-dcard"><mark>Design Your Card</mark></div>
+            </a>
+        }
+
+        <img src="~/assets/logo_full.svg" alt="" class="profile" />
+    </div>
+
+    <div class="header__profile">
+        <p class="profile--items" id="profile">Profile</p>
+
+       
+
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { Areas = "~/" })" method="post">
+            <button type="submit" class="profile--items">Logout</button>
         </form>
-    </li>
+    </div>
+
+
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+    <a class="btn btn-signup" asp-area="Identity" asp-page="/Account/Register">Signup</a>
+    <a class="btn btn-login" asp-area="Identity" asp-page="/Account/Login">Login</a>
 }
-</ul>

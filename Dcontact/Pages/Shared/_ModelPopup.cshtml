@@ -1,0 +1,28 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@namespace Dcontact.Pages.Shared
+@using Microsoft.AspNetCore.Html
+@model _ModelPopup
+
+@if (Model != null && !string.IsNullOrEmpty(Model.Message))
+{
+<!-- POPUP -->
+<div class="overlay__popup">
+    <div class="popup__container">
+        <div class="popup__header">
+            <i id="closePopup" class="fa-regular fa-circle-xmark"></i>
+        </div>
+        <div class="popup__detail">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div class="popup__detail--content">
+                   
+                    <span>@(new HtmlString(Model.Message))</span>
+            </div>
+        </div>
+        <div class="popup__footer">
+            <button class="btnClosePopup">CLOSE</button>
+        </div>
+    </div>
+</div>
+}

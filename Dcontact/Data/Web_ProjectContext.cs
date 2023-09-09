@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Dcontact.Data
 {
@@ -32,9 +33,10 @@ namespace Dcontact.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Data Source = localhost; Initial Catalog = Web_Project; User ID = sa; Password=123456 ; integrated security = True; Encrypt=False");
             }
+            optionsBuilder.UseLazyLoadingProxies(true);
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -72,13 +74,14 @@ namespace Dcontact.Data
 
                 entity.Property(e => e.IdUser).HasColumnName("ID_User");
 
-                entity.HasOne(d => d.IdUserIdentityNavigation)
+                entity.Property(e => e.view).HasColumnName("View").HasDefaultValueSql("((0))");
+
+                entity.HasOne(d => d.IdUserNavigation)
                     .WithMany()
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbDcontact_tbUser");
             });
-
 
             modelBuilder.Entity<TbOrderInformation>(entity =>
             {
@@ -115,13 +118,15 @@ namespace Dcontact.Data
 
             modelBuilder.Entity<TbReport>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("tbReport");
+
+                entity.HasKey(e => e.Id);
 
                 entity.HasIndex(e => e.IdRow, "IX_tbReport_ID_row");
 
                 entity.HasIndex(e => e.IdUser, "IX_tbReport_ID_user");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("(N'')");
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
@@ -132,13 +137,13 @@ namespace Dcontact.Data
                 entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.HasOne(d => d.IdRowNavigation)
-                    .WithMany()
+                    .WithMany(p => p.TbReports)
                     .HasForeignKey(d => d.IdRow)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbReport_tbRowContent");
 
                 entity.HasOne(d => d.IdUserIdentityNavigation)
-                    .WithMany()
+                    .WithMany(p => p.TbReports)
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tbReport_AspNetUsers");
@@ -147,8 +152,6 @@ namespace Dcontact.Data
             modelBuilder.Entity<TbRowContent>(entity =>
             {
                 entity.ToTable("tbRowContent");
-
-                entity.HasIndex(e => e.IdRowDesign, "IX_tbRowContent_ID_RowDesign");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -162,7 +165,9 @@ namespace Dcontact.Data
                     .IsUnicode(false)
                     .HasColumnName("code");
 
-                entity.Property(e => e.IdRowDesign).HasColumnName("ID_RowDesign");
+                entity.Property(e => e.IdDcontact)
+                    .HasMaxLength(450)
+                    .HasColumnName("ID_Dcontact");
 
                 entity.Property(e => e.Link)
                     .IsUnicode(false)
@@ -170,11 +175,11 @@ namespace Dcontact.Data
 
                 entity.Property(e => e.Text).HasColumnName("text");
 
-                entity.HasOne(d => d.IdRowDesignNavigation)
+                entity.HasOne(d => d.IdDcontactNavigation)
                     .WithMany(p => p.TbRowContents)
-                    .HasForeignKey(d => d.IdRowDesign)
+                    .HasForeignKey(d => d.IdDcontact)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbRowContent_tbRowDesign");
+                    .HasConstraintName("FK_tbRowContent_tbDcontact");
             });
 
             modelBuilder.Entity<TbRowDesign>(entity =>
@@ -193,16 +198,26 @@ namespace Dcontact.Data
                     .IsUnicode(false)
                     .HasColumnName("font");
 
+                entity.Property(e => e.IdRowContent)
+                    .HasMaxLength(450)
+                    .HasColumnName("ID_RowContent");
+
                 entity.Property(e => e.IdTemplate).HasColumnName("ID_Template");
 
                 entity.Property(e => e.RowColor)
                     .IsUnicode(false)
                     .HasColumnName("rowColor");
 
+                entity.HasOne(d => d.IdRowContentNavigation)
+                    .WithMany(p => p.TbRowDesigns)
+                    .HasForeignKey(d => d.IdRowContent)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_tbRowDesign_tbRowContent");
+
                 entity.HasOne(d => d.IdTemplateNavigation)
                     .WithMany(p => p.TbRowDesigns)
                     .HasForeignKey(d => d.IdTemplate)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_tbRowDesign_tbTemplate1");
             });
 
@@ -223,6 +238,9 @@ namespace Dcontact.Data
                 entity.Property(e => e.IdDcontact)
                     .HasMaxLength(450)
                     .HasColumnName("ID_Dcontact");
+
+                entity.Property(e => e.Name)
+                      .HasColumnName("Name");
 
                 entity.Property(e => e.IsApply).HasColumnName("isApply");
 
@@ -245,20 +263,217 @@ namespace Dcontact.Data
                     .HasConstraintName("FK_tbTemplate_tbDcontact");
             });
 
-            
+
 
             OnModelCreatingPartial(modelBuilder);
         }
 
+
+
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-        public TbDcontact CreateTbDcontact(string id)
+        public void CreateDcontact(UserIdentity user)
         {
-            return new TbDcontact()
+
+            var d = this.TbDcontacts.FirstOrDefault(x => x.IdUser == user.Id);
+            if (d != null)
+            {
+                throw new Exception($"Can't create a dcontact for user {user.Id}, user's dcontact has been exist!");
+            }
+
+            var Dcontact = new TbDcontact()
             {
                 Id = Guid.NewGuid().ToString(),
-                IdUser = id
+                IdUser = user.Id
             };
+
+            this.TbDcontacts.Add(Dcontact);
+            this.SaveChanges();
+
+            var temp = this.TbTemplates.FirstOrDefault(x => x.IdDcontact == Dcontact.Id && x.IsApply == true);
+            if (temp != null)
+            {
+                temp.IsApply = false;
+                this.Update(temp);
+                this.SaveChanges();
+            }
+            var Template = new TbTemplate()
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdDcontact = Dcontact.Id,
+                IdAvatar = "default",
+                IdBackGround = "default",
+                Name = "Template Default",
+                IsApply = true
+            };
+            this.TbTemplates.Add(Template);
+            this.SaveChanges();
+
+            createRow(Dcontact.Id);
+
         }
+
+        public TbTemplate CreateTemplate(string idDcontact, string Name)
+        {
+            var content = this.TbRowContents.Where(f => f.IdDcontact == idDcontact).ToList();
+
+            var template = new TbTemplate()
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdDcontact = idDcontact,
+                IdAvatar = Default.ID_TEMPLATE_AVATAR,
+                IdBackGround = Default.ID_TEMPLATE_BACKGROUND,
+                Name = Name,
+                IsApply = false
+            };
+
+
+            this.TbTemplates.Add(template);
+            this.SaveChanges();
+            foreach (var contents in content)
+            {
+                AddRowDesign(template.Id, contents.Id);
+            }
+            return ApplyTemplate(idDcontact, template.Id);
+
+        }
+
+        public TbTemplate ApplyTemplate(string idDcontact, string idTemplate)
+        {
+            var temp = this.TbTemplates.FirstOrDefault(x => x.IdDcontact == idDcontact && x.IsApply == true);
+            if (temp != null)
+            {
+                temp.IsApply = false;
+                this.Update(temp);
+                //this.SaveChanges();
+            }
+
+            var tempApply = this.TbTemplates.FirstOrDefault(t => t.Id == idTemplate);
+            tempApply.IsApply = true;
+            this.Update(tempApply);
+            this.SaveChanges();
+            return tempApply;
+        }
+
+        public TbRowContent createRow(string idDcontact)
+        {
+            var templates = this.TbTemplates.Where(e => e.IdDcontact == idDcontact).ToList();
+            TbRowContent ct = new TbRowContent()
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdDcontact = idDcontact,
+                Text = Default.ROW_TEXT,
+                Link = Default.ROW_LINK,
+                Code = null,
+                Birth = null,
+                Click = Default.ROW_CLICK
+            };
+            this.TbRowContents.Add(ct);
+            this.SaveChanges();
+            foreach (var temp in templates)
+            {
+                AddRowDesign(temp.Id, ct.Id);
+            }
+            return ct;
+        }
+
+        public void AddRowDesign(string idTemplate, string idRowContent)
+        {
+            var rowDesign = new TbRowDesign()
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdRowContent = idRowContent,
+                IdTemplate = idTemplate,
+                Font = Default.ROW_FONT,
+                RowColor = Default.ROW_COLOR,
+                Bullet = Default.ROW_BULLET
+            };
+            this.TbRowDesigns.Add(rowDesign);
+            this.SaveChanges();
+        }
+
+        public bool UpdateRow(string idContent, string idDcontact, string text, string link, string font, string color, string? code, string? birth, string? bullet)
+        {
+            var content = this.TbRowContents.FirstOrDefault(e => e.Id == idContent);
+            var template = this.TbTemplates.FirstOrDefault(t => t.IdDcontact == idDcontact && t.IsApply == true);
+            var design = this.TbRowDesigns.FirstOrDefault(d => d.IdRowContent == content.Id && d.IdTemplate == template.Id);
+            if (content == null || design == null)
+            {
+                return false;
+            }
+            content.Link = link;
+            content.Text = text;
+            this.Update(content);
+
+            design.Font = font;
+            design.RowColor = color;
+            this.Update(design);
+            if (code != null)
+            {
+                content.Code = code;
+            }
+            if (birth != null)
+            {
+                content.Birth = DateTime.Parse(birth);
+            }
+            if (bullet != null)
+            {
+                design.Bullet = bullet;
+            }
+            this.SaveChanges();
+            return true;
+        }
+
+        public bool UpdateBackground(string idDcontact, string imgBg, string idTemplate)
+        {
+            var template = this.TbTemplates.FirstOrDefault(t => t.IdDcontact == idDcontact && t.Id == idTemplate);
+  
+            var tbBackground = new TbBackGround()
+            {
+                Id = Guid.NewGuid().ToString(),
+                PictureLocation = imgBg
+            };
+
+            this.TbBackGrounds.Add(tbBackground);
+            template.IdBackGround = tbBackground.Id;
+            this.Update(template);
+
+            this.SaveChanges();
+            return true;
+        }
+
+        public bool UpdateAvatar(string idDcontact, string imgAvt, string idTemplate)
+        {
+            var template = this.TbTemplates.FirstOrDefault(t => t.IdDcontact == idDcontact && t.Id == idTemplate);
+
+            var tbAvatar = new TbAvatar()
+            {
+                Id = Guid.NewGuid().ToString(),
+                PictureLocation= imgAvt
+            };
+
+            this.TbAvatars.Add(tbAvatar);
+            template.IdAvatar = tbAvatar.Id;
+            this.Update(template);
+
+            this.SaveChanges();
+            return true;
+        }
+
+        public void InsertPayment(string tradingCode,string userid, string address, string phone)
+        {
+            TbOrderInformation ord = new TbOrderInformation()
+            {
+                TradingCode = tradingCode,
+                IdUser = userid,
+                Address = address,
+                Phone = phone,
+                ExportPrice = 50000,
+                PitureLocation = "abcabc"
+            };
+            this.TbOrderInformations.Add(ord);
+            this.SaveChanges();
+        }
+
     }
 }

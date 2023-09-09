@@ -1,0 +1,129 @@
+
+.guest__container {
+    width: 100%;
+    background: rgba(255,255,255, .8);
+}
+
+.guest__container--content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: calc(100% - 60px);
+}
+
+.guest__card {
+    width: 17em;
+    height: 90%;
+    border-radius: 10px;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.guest__card--content {
+    width: 100%;
+    height: 100%;
+}
+
+.card__content--avt {
+    width: 30%;
+    height: 15%;
+    margin: 0.5em auto;
+}
+
+    .card__content--avt img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+
+.card__content--rowList {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    margin: 1em auto;
+    height: 60%;
+}
+
+    .card__content--rowList::-webkit-scrollbar {
+        width: 0;
+    }
+
+.card__content--rowItem {
+    background-color: #ff7c7c;
+    padding: 10px;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    margin: 0.5em 0;
+    line-height: 1.5em;
+    cursor: pointer;
+    transition: .25s;
+}
+
+    .card__content--rowItem:hover {
+        opacity: .6;
+    }
+
+    .card__content--rowItem i {
+        color: #fff;
+        font-size: 1.5em
+    }
+
+    .card__content--rowItem label {
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+    }
+.row_container{
+    flex-grow:1;
+}
+
+.errorIcon i {
+    color: transparent;
+    cursor: pointer;
+    transition: .25s;
+}
+
+    .errorIcon i:hover {
+        color: red;
+    }
+
+.card__content--footer {
+    width: 50px;
+    margin: 0 auto;
+}
+
+.card__content--username {
+    display: flex;
+    justify-content: center;
+}
+
+    .card__content--username span {
+        font-family: 'Pacifico-Regular';
+    }
+
+    .card__content--username span:before {
+        content: "@";
+    }
+
+    .guest__footer {
+        position: absolute;
+        bottom: 2em;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'Pacifico-Regular';
+        letter-spacing: 0.4em;
+    }
+
+#backHome {
+    text-decoration: underline;
+    color: var(--title-color);
+    cursor: pointer;
+}
